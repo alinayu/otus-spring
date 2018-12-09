@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="testService" class="ru.otus.service.TestServiceImpl">
+        <property name="questionService" ref="questionService"/>
+        <property name="assessmentService" ref="assessmentService"/>
+        <property name="inputOutputUtils" ref="inputOutputUtils"/>
+        <property name="questionsCsvFileName" value="questions.csv"/>
+    </bean>
+
+    <bean id="questionService" class="ru.otus.service.QuestionServiceImpl"/>
+
+    <bean id="assessmentService" class="ru.otus.service.AssessmentServiceImpl">
+        <property name="inputOutputUtils" ref="inputOutputUtils"/>
+    </bean>
+
+    <bean id="inputOutputUtils" class="ru.otus.utils.InputOutputUtils"/>
+
+</beans>
