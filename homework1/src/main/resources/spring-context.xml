@@ -8,16 +8,16 @@
 
 
     <bean id="testService" class="ru.otus.service.TestServiceImpl">
-        <property name="questionService" ref="questionService"/>
-        <property name="assessmentService" ref="assessmentService"/>
-        <property name="inputOutputUtils" ref="inputOutputUtils"/>
-        <property name="questionsCsvFileName" value="${questions.csv.file.name}"/>
+        <constructor-arg ref="questionService"/>
+        <constructor-arg ref="assessmentService"/>
+        <constructor-arg ref="inputOutputUtils"/>
+        <constructor-arg value="${questions.csv.file.name}"/>
     </bean>
 
     <bean id="questionService" class="ru.otus.service.QuestionServiceImpl"/>
 
     <bean id="assessmentService" class="ru.otus.service.AssessmentServiceImpl">
-        <property name="inputOutputUtils" ref="inputOutputUtils"/>
+        <constructor-arg ref="inputOutputUtils"/>
     </bean>
 
     <bean id="inputOutputUtils" class="ru.otus.utils.InputOutputUtils"/>

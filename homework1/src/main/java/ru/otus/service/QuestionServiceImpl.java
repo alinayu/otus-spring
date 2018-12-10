@@ -7,8 +7,11 @@ import ru.otus.model.Question;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.String.format;
 
 /**
  * Created by alina on 09.12.2018.
@@ -17,8 +20,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     public List<Question> getQuestionsFromCsvFile(String fileName) {
         List<Question> questions = new ArrayList<>();
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(fileName).getFile());
+        File file = getFileFromResource(fileName);
 
         try {
             CSVParser.parse(new FileReader(file), CSVFormat.DEFAULT)
@@ -27,5 +29,14 @@ public class QuestionServiceImpl implements QuestionService {
             e.printStackTrace();
         }
         return questions;
+    }
+
+    private File getFileFromResource(String fileName) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL resource = classLoader.getResource(fileName);
+        if (resource == null) {
+            throw new FileNotFoundException(format("Файл %s не найден", fileName));
+        }
+        return new File(resource.getFile());
     }
 }

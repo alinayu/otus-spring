@@ -19,15 +19,13 @@ public class TestServiceImpl implements TestService  {
 
     private String questionsCsvFileName;
 
-    public void setQuestionService(QuestionService questionService) {
+    public TestServiceImpl(QuestionService questionService, AssessmentService assessmentService,
+                           InputOutputUtils inputOutputUtils, String questionsCsvFileName) {
         this.questionService = questionService;
+        this.assessmentService = assessmentService;
+        this.inputOutputUtils = inputOutputUtils;
+        this.questionsCsvFileName = questionsCsvFileName;
     }
-
-    public void setAssessmentService(AssessmentService assessmentService) { this.assessmentService = assessmentService; }
-
-    public void setInputOutputUtils(InputOutputUtils inputOutputUtils) { this.inputOutputUtils = inputOutputUtils; }
-
-    public void setQuestionsCsvFileName(String questionsCsvFileName) { this.questionsCsvFileName = questionsCsvFileName; }
 
     public void doTest(InputStream in, OutputStream out) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));

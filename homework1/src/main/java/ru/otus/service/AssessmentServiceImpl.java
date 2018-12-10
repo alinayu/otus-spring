@@ -14,7 +14,9 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     private InputOutputUtils inputOutputUtils;
 
-    public void setInputOutputUtils(InputOutputUtils inputOutputUtils) { this.inputOutputUtils = inputOutputUtils; }
+    public AssessmentServiceImpl(InputOutputUtils inputOutputUtils) {
+        this.inputOutputUtils = inputOutputUtils;
+    }
 
     public int rate(BufferedReader reader, OutputStreamWriter writer, List<Question> questions) {
         int score = 0;

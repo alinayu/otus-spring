@@ -28,8 +28,7 @@ class AssessmentServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        assessmentService = new AssessmentServiceImpl();
-        ((AssessmentServiceImpl) assessmentService).setInputOutputUtils(inputOutputUtils);
+        assessmentService = new AssessmentServiceImpl(inputOutputUtils);
     }
 
     @Test
