@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:property-placeholder
+            location="classpath:application.properties" />
+
+
+    <bean id="testService" class="ru.otus.service.TestServiceImpl">
+        <constructor-arg ref="questionService"/>
+        <constructor-arg ref="assessmentService"/>
+        <constructor-arg ref="inputOutputUtils"/>
+        <constructor-arg value="${questions.csv.file.name}"/>
+    </bean>
+
+    <bean id="questionService" class="ru.otus.service.QuestionServiceImpl"/>
+
+    <bean id="assessmentService" class="ru.otus.service.AssessmentServiceImpl">
+        <constructor-arg ref="inputOutputUtils"/>
+    </bean>
+
+    <bean id="inputOutputUtils" class="ru.otus.utils.InputOutputUtils"/>
+
+</beans>
