@@ -32,7 +32,6 @@ class TestServiceImplTest {
     @BeforeEach
     void setUp() {
         testService = new TestServiceImpl(questionService, assessmentService, messageSource);
-        testService.setQuestionsCsvFileName("questionsCsvFileName");
         testService.setLocaleLanguage("ru");
         testService.setLocaleCountry("RU");
     }
@@ -41,19 +40,21 @@ class TestServiceImplTest {
     void doTest() {
         String name = "name";
         String greetings = "greetings";
+        String fileName = "questionsCsvFileName";
         String resultMessage = "resultMessage";
         InputStream inputStream = new ByteArrayInputStream(name.getBytes());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         List<Question> questions = asList(new Question("question", "answer"));
         int score = 1;
 
-        when(messageSource.getMessage(any(), any(), any())).thenReturn(greetings).thenReturn(resultMessage);
-        when(questionService.getQuestionsFromCsvFile("questionsCsvFileName")).thenReturn(questions);
+        when(messageSource.getMessage(any(), any(), any())).thenReturn(greetings)
+                .thenReturn(fileName).thenReturn(resultMessage);
+        when(questionService.getQuestionsFromCsvFile(fileName)).thenReturn(questions);
         when(assessmentService.rate(any(), any(), anyList())).thenReturn(score);
 
         testService.doTest(inputStream, outputStream);
 
-        verify(questionService, times(1)).getQuestionsFromCsvFile(eq("questionsCsvFileName"));
+        verify(questionService, times(1)).getQuestionsFromCsvFile(eq(fileName));
         verify(assessmentService, times(1)).rate(any(), any(), eq(questions));
 
         assertThat(outputStream.toString()).isEqualTo(greetings + resultMessage);

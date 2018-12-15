@@ -27,9 +27,6 @@ public class TestServiceImpl implements TestService  {
 
     private MessageSource messageSource;
 
-    @Value("${questions.csv.file.name}")
-    private String questionsCsvFileName;
-
     @Value("${locale.language:ru}")
     private String localeLanguage;
 
@@ -41,10 +38,6 @@ public class TestServiceImpl implements TestService  {
         this.questionService = questionService;
         this.assessmentService = assessmentService;
         this.messageSource = messageSource;
-    }
-
-    public void setQuestionsCsvFileName(String questionsCsvFileName) {
-        this.questionsCsvFileName = questionsCsvFileName;
     }
 
     public void setLocaleLanguage(String localeLanguage) {
@@ -63,7 +56,8 @@ public class TestServiceImpl implements TestService  {
         writeToOutput(writer, messageSource.getMessage("test.greetings", null, locale));
         readlineFromInput(reader);
 
-        List<Question> questions = questionService.getQuestionsFromCsvFile(questionsCsvFileName);
+        List<Question> questions = questionService
+                .getQuestionsFromCsvFile(messageSource.getMessage("questions.csv.file.name", null, locale));
 
         writeToOutput(writer, messageSource.getMessage("test.result",
                 new String[] { valueOf(assessmentService.rate(reader, writer, questions)) },
