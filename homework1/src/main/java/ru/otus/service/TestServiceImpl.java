@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.otus.model.Question;
 import sun.util.locale.LocaleUtils;
@@ -27,17 +28,24 @@ public class TestServiceImpl implements TestService  {
 
     private MessageSource messageSource;
 
-    @Value("${locale.language:ru}")
+    private Environment environment;
+
+    @Value("${locale.language:en}")
     private String localeLanguage;
 
-    @Value("${locale.country:RU}")
+    @Value("${locale.country:US}")
     private String localeCountry;
 
+    @Value("${questions.csv.file.name.default}")
+    private String defaultQuestionsCsvFileName;
+
     @Autowired
-    public TestServiceImpl(QuestionService questionService, AssessmentService assessmentService, MessageSource messageSource) {
+    public TestServiceImpl(QuestionService questionService, AssessmentService assessmentService,
+                           MessageSource messageSource, Environment environment) {
         this.questionService = questionService;
         this.assessmentService = assessmentService;
         this.messageSource = messageSource;
+        this.environment = environment;
     }
 
     public void setLocaleLanguage(String localeLanguage) {
@@ -57,13 +65,18 @@ public class TestServiceImpl implements TestService  {
         readlineFromInput(reader);
 
         List<Question> questions = questionService
-                .getQuestionsFromCsvFile(messageSource.getMessage("questions.csv.file.name", null, locale));
+                .getQuestionsFromCsvFile(getQuestionsCsvFileName(localeLanguage));
 
         writeToOutput(writer, messageSource.getMessage("test.result",
                 new String[] { valueOf(assessmentService.rate(reader, writer, questions)) },
                 locale));
         close(reader);
         close(writer);
+    }
+
+    private String getQuestionsCsvFileName(String localeLanguage) {
+        String property = environment.getProperty("questions.csv.file.name." + localeLanguage);
+        return property != null ? property : defaultQuestionsCsvFileName;
     }
 
 
