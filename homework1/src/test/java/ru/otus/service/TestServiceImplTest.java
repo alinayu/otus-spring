@@ -5,54 +5,60 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import ru.otus.model.Question;
-import ru.otus.utils.InputOutputUtils;
 
-import java.io.BufferedReader;
-import java.io.OutputStreamWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TestServiceImplTest {
-
-    @Mock
-    private InputOutputUtils inputOutputUtils;
     @Mock
     private QuestionService questionService;
     @Mock
     private AssessmentService assessmentService;
+    @Mock
+    private MessageSource messageSource;
 
-    private String questionsCsvFileName;
+    private TestServiceImpl testService;
 
-    private TestService testService;
+    private String fileName = "questions_ru.csv";
 
     @BeforeEach
     void setUp() {
-        questionsCsvFileName = "questionsCsvFileName";
-        testService = new TestServiceImpl(questionService, assessmentService, inputOutputUtils, questionsCsvFileName);
+        testService = new TestServiceImpl(questionService, assessmentService, messageSource);
+        testService.setLocaleLanguage("ru");
+        testService.setLocaleCountry("RU");
+        testService.setActualQuestionsCsvFileName(fileName);
     }
 
     @Test
     void doTest() {
+        String name = "name";
+        String greetings = "greetings";
+        String resultMessage = "resultMessage";
+        InputStream inputStream = new ByteArrayInputStream(name.getBytes());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         List<Question> questions = asList(new Question("question", "answer"));
-        int score = 5;
-        given(questionService.getQuestionsFromCsvFile(anyString())).willReturn(questions);
-        given(assessmentService.rate(any(), any(), anyList())).willReturn(score);
+        int score = 1;
 
-        testService.doTest(System.in, System.out);
+        when(messageSource.getMessage(any(), any(), any())).thenReturn(greetings).thenReturn(resultMessage);
+        when(questionService.getQuestionsFromCsvFile(fileName)).thenReturn(questions);
+        when(assessmentService.rate(any(), any(), anyList())).thenReturn(score);
 
-        verify(inputOutputUtils, times(1)).writeToOutput(any(), eq("Представьтесь, пожалуйста: \n"));
-        verify(inputOutputUtils, times(1)).readlineFromInput(any());
-        verify(questionService, times(1)).getQuestionsFromCsvFile(eq(questionsCsvFileName));
-        verify(assessmentService, times(1)).rate(any(), any(), anyList());
-        verify(inputOutputUtils, times(1)).writeToOutput(any(), eq("Количество правильных ответов : " + score));
-        verify(inputOutputUtils, times(1)).close(any(BufferedReader.class));
-        verify(inputOutputUtils, times(1)).close(any(OutputStreamWriter.class));
+        testService.doTest(inputStream, outputStream);
+
+        verify(questionService, times(1)).getQuestionsFromCsvFile(eq(fileName));
+        verify(assessmentService, times(1)).rate(any(), any(), eq(questions));
+
+        assertThat(outputStream.toString()).isEqualTo(greetings + resultMessage);
     }
 }

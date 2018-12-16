@@ -7,9 +7,9 @@ import java.io.OutputStreamWriter;
 /**
  * Created by alina on 09.12.2018.
  */
-public class InputOutputUtils {
+public class InputOutputHelper {
 
-    public void writeToOutput(OutputStreamWriter writer, String str) {
+    public static void writeToOutput(OutputStreamWriter writer, String str) {
         try {
             writer.write(str);
             writer.flush();
@@ -18,7 +18,7 @@ public class InputOutputUtils {
         }
     }
 
-    public String readlineFromInput(BufferedReader reader) {
+    public static String readlineFromInput(BufferedReader reader) {
         try {
             return reader.readLine();
         } catch (IOException e) {
@@ -27,7 +27,7 @@ public class InputOutputUtils {
         return null;
     }
 
-    public void close(BufferedReader reader) {
+    public static void close(BufferedReader reader) {
         try {
             reader.close();
         } catch (IOException e) {
@@ -35,7 +35,7 @@ public class InputOutputUtils {
         }
     }
 
-    public void close(OutputStreamWriter writer) {
+    public static void close(OutputStreamWriter writer) {
         try {
             writer.close();
         } catch (IOException e) {

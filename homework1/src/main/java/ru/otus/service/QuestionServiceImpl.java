@@ -2,11 +2,13 @@ package ru.otus.service;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import ru.otus.model.Question;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,27 +18,41 @@ import static java.lang.String.format;
 /**
  * Created by alina on 09.12.2018.
  */
+@Service
 public class QuestionServiceImpl implements QuestionService {
+
+    @Value("${csv.record.size}")
+    private int csvRecordSize;
+
+    public void setCsvRecordSize(int csvRecordSize) {
+        this.csvRecordSize = csvRecordSize;
+    }
 
     public List<Question> getQuestionsFromCsvFile(String fileName) {
         List<Question> questions = new ArrayList<>();
-        File file = getFileFromResource(fileName);
-
         try {
-            CSVParser.parse(new FileReader(file), CSVFormat.DEFAULT)
-                    .forEach(record -> questions.add(new Question(record.get(0), record.get(1))));
+            CSVParser.parse(getReaderFromResource(fileName), CSVFormat.DEFAULT)
+                    .getRecords()
+                    .forEach(record -> questions.add(getQuestionFromRecord(record)));
         } catch (IOException e) {
             e.printStackTrace();
         }
         return questions;
     }
 
-    private File getFileFromResource(String fileName) {
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource(fileName);
-        if (resource == null) {
-            throw new FileNotFoundException(format("Файл %s не найден", fileName));
+    private Question getQuestionFromRecord(CSVRecord record) {
+        if (record.size() != csvRecordSize) {
+            throw new IncorrectFileFormatException("Incorrect format file");
         }
-        return new File(resource.getFile());
+        return new Question(record.get(0), record.get(1));
+    }
+
+    private Reader getReaderFromResource(String fileName) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+        if (inputStream == null) {
+            throw new FileNotFoundException(format("File %s not found", fileName));
+        }
+        return new InputStreamReader(inputStream);
     }
 }
