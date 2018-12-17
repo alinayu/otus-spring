@@ -2,9 +2,11 @@ package ru.otus;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import ru.otus.service.TestService;
 
 /**
  * Created by alina on 09.12.2018.
@@ -22,7 +24,10 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
+        TestService testService = context.getBean(TestService.class);
+        testService.doTest(System.in, System.out);
+        context.close();
     }
 }
 
