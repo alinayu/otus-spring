@@ -2,11 +2,7 @@ package ru.otus.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.model.Question;
-import ru.otus.utils.InputOutputHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,12 +12,9 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-
-@ExtendWith(MockitoExtension.class)
 class AssessmentServiceImplTest {
 
     private AssessmentService assessmentService;

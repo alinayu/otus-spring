@@ -1,12 +1,11 @@
 package ru.otus.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
-import org.springframework.core.env.Environment;
+import org.springframework.test.context.TestPropertySource;
 import ru.otus.model.Question;
 
 import java.io.ByteArrayInputStream;
@@ -19,44 +18,36 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@TestPropertySource(value = "classpath:application-test.properties")
 class TestServiceImplTest {
-    @Mock
+
+    @MockBean
     private QuestionService questionService;
-    @Mock
+    @MockBean
     private AssessmentService assessmentService;
-    @Mock
+    @MockBean
     private MessageSource messageSource;
-
-    private TestServiceImpl testService;
-
-    private String fileName = "questions_ru.csv";
-
-    @BeforeEach
-    void setUp() {
-        testService = new TestServiceImpl(questionService, assessmentService, messageSource);
-        testService.setLocaleLanguage("ru");
-        testService.setLocaleCountry("RU");
-        testService.setActualQuestionsCsvFileName(fileName);
-    }
+    @Autowired
+    private TestService testService;
 
     @Test
     void doTest() {
         String name = "name";
         String greetings = "greetings";
         String resultMessage = "resultMessage";
-        InputStream inputStream = new ByteArrayInputStream(name.getBytes());
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         List<Question> questions = asList(new Question("question", "answer"));
         int score = 1;
+        InputStream inputStream = new ByteArrayInputStream(name.getBytes());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         when(messageSource.getMessage(any(), any(), any())).thenReturn(greetings).thenReturn(resultMessage);
-        when(questionService.getQuestionsFromCsvFile(fileName)).thenReturn(questions);
+        when(questionService.getQuestionsFromCsvFile("questions_test_en.csv")).thenReturn(questions);
         when(assessmentService.rate(any(), any(), anyList())).thenReturn(score);
 
         testService.doTest(inputStream, outputStream);
 
-        verify(questionService, times(1)).getQuestionsFromCsvFile(eq(fileName));
+        verify(questionService, times(1)).getQuestionsFromCsvFile(eq("questions_test_en.csv"));
         verify(assessmentService, times(1)).rate(any(), any(), eq(questions));
 
         assertThat(outputStream.toString()).isEqualTo(greetings + resultMessage);

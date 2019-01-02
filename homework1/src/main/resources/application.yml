@@ -1,0 +1,9 @@
+csv:
+  record:
+    size: 2
+questions:
+  csv:
+    file:
+      name:
+        default: questions.csv
+        ru: questions_ru.csv

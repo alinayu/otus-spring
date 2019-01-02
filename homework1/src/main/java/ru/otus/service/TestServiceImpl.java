@@ -45,16 +45,6 @@ public class TestServiceImpl implements TestService  {
         this.messageSource = messageSource;
     }
 
-    public void setLocaleLanguage(String localeLanguage) {
-        this.localeLanguage = localeLanguage;
-    }
-
-    public void setLocaleCountry(String localeCountry) {
-        this.localeCountry = localeCountry;
-    }
-
-    public void setActualQuestionsCsvFileName(String actualQuestionsCsvFileName) { this.actualQuestionsCsvFileName = actualQuestionsCsvFileName; }
-
     public void doTest(InputStream in, OutputStream out) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         OutputStreamWriter writer = new OutputStreamWriter(out);
