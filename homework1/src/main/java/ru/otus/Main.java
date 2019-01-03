@@ -24,10 +24,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
-        TestService testService = context.getBean(TestService.class);
-        testService.doTest(System.in, System.out);
-        context.close();
+        SpringApplication.run(Main.class, args);
     }
 }
 

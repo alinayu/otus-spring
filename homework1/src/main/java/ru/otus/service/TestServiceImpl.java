@@ -1,13 +1,9 @@
 package ru.otus.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.otus.model.Question;
-import sun.util.locale.LocaleUtils;
 
 import java.io.*;
 import java.util.List;
@@ -37,7 +33,6 @@ public class TestServiceImpl implements TestService  {
     @Value("${questions.csv.file.name.${locale.language:en}:${questions.csv.file.name.default}}")
     private String actualQuestionsCsvFileName;
 
-    @Autowired
     public TestServiceImpl(QuestionService questionService, AssessmentService assessmentService,
                            MessageSource messageSource) {
         this.questionService = questionService;
