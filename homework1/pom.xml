@@ -23,12 +23,7 @@
         <version>2.1.1.RELEASE</version>
     </parent>
 
-    <!-- Зависимость для web-приложений -->
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.shell</groupId>
             <artifactId>spring-shell-starter</artifactId>

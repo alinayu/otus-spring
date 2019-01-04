@@ -13,8 +13,16 @@ public class TestCommands {
         this.testService = testService;
     }
 
+    @ShellMethod("Login.")
+    public void login() { testService.login(); }
+
     @ShellMethod("Test student.")
     public void test() {
-        testService.doTest(System.in, System.out);
+        testService.doTest();
+    }
+
+    @ShellMethod("Write score.")
+    public void writeScore() {
+        testService.writeScore();
     }
 }
