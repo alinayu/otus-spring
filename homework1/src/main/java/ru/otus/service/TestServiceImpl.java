@@ -40,8 +40,6 @@ public class TestServiceImpl implements TestService  {
 
     private OutputStreamWriter writer;
 
-    private Locale locale;
-
     private int score;
 
     @Autowired
@@ -50,24 +48,13 @@ public class TestServiceImpl implements TestService  {
         this.questionService = questionService;
         this.assessmentService = assessmentService;
         this.messageSource = messageSource;
-    }
-
-    @PostConstruct
-    public void init() {
         this.reader = new BufferedReader(new InputStreamReader(System.in));
         this.writer = new OutputStreamWriter(System.out);
-        this.locale = new Locale(localeLanguage, localeCountry);
-    }
-
-    @PreDestroy
-    public void destroy() {
-        close(reader);
-        close(writer);
     }
 
     @Override
     public void login() {
-        writeToOutput(writer, messageSource.getMessage("test.greetings", null, locale));
+        writeToOutput(writer, messageSource.getMessage("test.greetings", null, getLocale()));
         readlineFromInput(reader);
     }
 
@@ -81,7 +68,7 @@ public class TestServiceImpl implements TestService  {
     @Override
     public void writeScore() {
         writeToOutput(writer, messageSource.getMessage("test.result", new String[] { valueOf(score) },
-                locale));
+                getLocale()));
     }
 
     @Override
@@ -99,5 +86,8 @@ public class TestServiceImpl implements TestService  {
         return  score;
     }
 
+    private Locale getLocale() {
+        return new Locale(localeLanguage, localeCountry);
+    }
 
 }
