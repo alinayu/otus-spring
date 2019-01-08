@@ -3,12 +3,11 @@ package ru.otus.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.otus.model.Question;
-import sun.util.locale.LocaleUtils;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.*;
 import java.util.List;
 import java.util.Locale;
@@ -37,32 +36,58 @@ public class TestServiceImpl implements TestService  {
     @Value("${questions.csv.file.name.${locale.language:en}:${questions.csv.file.name.default}}")
     private String actualQuestionsCsvFileName;
 
+    private BufferedReader reader;
+
+    private OutputStreamWriter writer;
+
+    private int score;
+
     @Autowired
     public TestServiceImpl(QuestionService questionService, AssessmentService assessmentService,
                            MessageSource messageSource) {
         this.questionService = questionService;
         this.assessmentService = assessmentService;
         this.messageSource = messageSource;
+        this.reader = new BufferedReader(new InputStreamReader(System.in));
+        this.writer = new OutputStreamWriter(System.out);
     }
 
-    public void doTest(InputStream in, OutputStream out) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        OutputStreamWriter writer = new OutputStreamWriter(out);
-        Locale locale = new Locale(localeLanguage, localeCountry);
-
-        writeToOutput(writer, messageSource.getMessage("test.greetings", null, locale));
+    @Override
+    public void login() {
+        writeToOutput(writer, messageSource.getMessage("test.greetings", null, getLocale()));
         readlineFromInput(reader);
+    }
 
+    @Override
+    public void doTest() {
         List<Question> questions = questionService
                 .getQuestionsFromCsvFile(actualQuestionsCsvFileName);
-
-        writeToOutput(writer, messageSource.getMessage("test.result",
-                new String[] { valueOf(assessmentService.rate(reader, writer, questions)) },
-                locale));
-        close(reader);
-        close(writer);
+        score = assessmentService.rate(reader, writer, questions);
     }
 
+    @Override
+    public void writeScore() {
+        writeToOutput(writer, messageSource.getMessage("test.result", new String[] { valueOf(score) },
+                getLocale()));
+    }
 
+    @Override
+    public void setReader(InputStream in) {
+        this.reader = new BufferedReader(new InputStreamReader(in));
+    }
+
+    @Override
+    public void setWriter(OutputStream out) {
+        this.writer = new OutputStreamWriter(out);
+    }
+
+    @Override
+    public int getScore() {
+        return  score;
+    }
+
+    private Locale getLocale() {
+        return new Locale(localeLanguage, localeCountry);
+    }
 
 }
