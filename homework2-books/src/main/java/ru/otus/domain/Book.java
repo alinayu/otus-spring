@@ -2,35 +2,43 @@ package ru.otus.domain;
 
 public class Book {
 
-    private int id;
+    private long id;
     private String name;
-    private int authorId;
-    private int genreId;
+    private Author author;
+    private Genre genre;
 
-    public Book(int id, String name, int authorId, int genreId) {
+    public Book(long id, String name, Author author, Genre genre) {
         this.id = id;
         this.name = name;
-        this.authorId = authorId;
-        this.genreId = genreId;
+        this.author = author;
+        this.genre = genre;
+    }
+
+    public Book(long id, String name, long authorId, long genreId) {
+        this.id = id;
+        this.name = name;
+        this.author = new Author(authorId);
+        this.genre = new Genre(genreId);
     }
 
     @Override
     public String toString() {
         return "id:" + id + " name:" + name +
-                " authorId: " + authorId + " genreId: " + genreId;
+                " author: " + author.getId() + " " + author.getLastName() + " " + author.getFirstName() +
+                " genre: " + genre.getId() + " " + genre.getName();
     }
 
-    public int getId() { return id; }
+    public long getId() { return id; }
 
     public String getName() {
         return name;
     }
 
-    public int getAuthorId() {
-        return authorId;
+    public Author getAuthor() {
+        return author;
     }
 
-    public int getGenreId() {
-        return genreId;
+    public Genre getGenre() {
+        return genre;
     }
 }

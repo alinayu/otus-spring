@@ -10,13 +10,15 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.otus.domain.Book;
 
+import java.util.List;
+
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.tuple;
 
 @RunWith(SpringRunner.class)
 @JdbcTest
 @Import(BookDaoJdbc.class)
-@TestPropertySource(value = "classpath:application-test.properties")
+@TestPropertySource(value = "classpath:application-test.yml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class BookDaoJdbcTest {
 
@@ -24,49 +26,53 @@ class BookDaoJdbcTest {
     private BookDao bookDao;
 
     @Test
-    void getAllTest() {
+    void getAll() {
         assertThat(bookDao.getAll())
                 .extracting("name")
                 .contains("Война и мир", "Капитанская дочка", "Евгений Онегин", "Совершенный код", "Чистый код");
     }
 
     @Test
-    void getByIdTest() {
+    void getById() {
         Book result = bookDao.getById(1);
         assertThat(result.getId()).isEqualTo(1);
         assertThat(result.getName()).isEqualTo("Война и мир");
-        assertThat(result.getAuthorId()).isEqualTo(2);
-        assertThat(result.getGenreId()).isEqualTo(2);
+        assertThat(result.getAuthor().getId()).isEqualTo(2);
+        assertThat(result.getAuthor().getFirstName()).isEqualTo("Лев");
+        assertThat(result.getGenre().getId()).isEqualTo(2);
+        assertThat(result.getGenre().getName()).isEqualTo("Роман");
     }
 
     @Test
-    void getByAuthorIdTest() {
+    void getByAuthorId() {
         assertThat(bookDao.getByAuthorId(1))
-                .extracting("id", "name", "authorId", "genreId")
-                .contains(tuple(2, "Капитанская дочка", 1, 1),
-                        tuple(3, "Евгений Онегин", 1, 2));
+                .extracting("id", "name", "author.id", "genre.id")
+                .contains(tuple(2L, "Капитанская дочка", 1L, 1L),
+                        tuple(3L, "Евгений Онегин", 1L, 2L));
     }
 
     @Test
-    void deleteByIdTest() {
+    void deleteById() {
         bookDao.deleteById(1);
-        assertThat(bookDao.getAll())
+        List<Book> allBooks = bookDao.getAll();
+        assertThat(allBooks.size()).isEqualTo(4);
+        assertThat(allBooks)
                 .extracting("name")
                 .contains("Капитанская дочка", "Евгений Онегин", "Совершенный код", "Чистый код");
     }
 
     @Test
-    void insertBookTest() {
-        bookDao.insert(6, "Анна Каренина", 2, 2);
+    void insert() {
+        bookDao.insert(new Book(6, "Анна Каренина", 2, 2));
         Book inserted = bookDao.getById(6);
         assertThat(inserted.getId()).isEqualTo(6);
         assertThat(inserted.getName()).isEqualTo("Анна Каренина");
-        assertThat(inserted.getAuthorId()).isEqualTo(2);
-        assertThat(inserted.getGenreId()).isEqualTo(2);
+        assertThat(inserted.getAuthor().getId()).isEqualTo(2);
+        assertThat(inserted.getGenre().getId()).isEqualTo(2);
     }
 
     @Test
-    void updateNameByIdTest() {
+    void updateNameById() {
         bookDao.updateNameById(2, "Пиковая дама");
         Book updated = bookDao.getById(2);
         assertThat(updated.getId()).isEqualTo(2);

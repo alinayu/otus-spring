@@ -1,4 +1,4 @@
-insert into authors (id, `first_name`, `last_name`) values
+insert into authors (id, `last_name`, `first_name`) values
 (1, 'Пушкин', 'Александр'),
 (2, 'Толстой', 'Лев'),
 (3, 'Макконнелл', 'Стив'),

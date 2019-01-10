@@ -8,13 +8,13 @@ public interface BookDao {
 
     List<Book> getAll();
 
-    Book getById(int id);
+    Book getById(long id);
 
-    List<Book> getByAuthorId(int authorId);
+    List<Book> getByAuthorId(long authorId);
 
-    void deleteById(int id);
+    void deleteById(long id);
 
-    void insert(int id, String name, int authorId, int genreId);
+    void insert(Book book);
 
-    void updateNameById(int id, String newName);
+    void updateNameById(long id, String newName);
 }
