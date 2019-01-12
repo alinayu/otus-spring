@@ -40,7 +40,7 @@ public class BookDaoJdbc implements BookDao {
         return "select b.id as id, b.name as name, a.id as author_id, " +
                 "a.first_name as author_first_name, a.last_name as author_last_name, " +
                 "g.id as genre_id, g.name as genre_name " +
-                "from books b join authors a on b.author_id = a.id join genres g on b.genre_id = g.id";
+                "from books b inner join authors a on b.author_id = a.id inner join genres g on b.genre_id = g.id";
     }
 
     @Override

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.otus.domain.Author;
 
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Java6Assertions.tuple;
 @RunWith(SpringRunner.class)
 @JdbcTest
 @Import(AuthorDaoJdbc.class)
-@TestPropertySource(value = "classpath:application-test.yml")
+@ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AuthorDaoJdbcTest {
     

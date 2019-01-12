@@ -4,7 +4,5 @@ spring:
     url: jdbc:h2:mem:db
     username: sa
     password: sa
-  shell:
-    interactive:
-      enabled: false
+    data: data-test.sql
 
