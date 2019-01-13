@@ -18,7 +18,6 @@ import static org.assertj.core.api.Java6Assertions.tuple;
 @RunWith(SpringRunner.class)
 @JdbcTest
 @Import(AuthorDaoJdbc.class)
-@ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AuthorDaoJdbcTest {
     
