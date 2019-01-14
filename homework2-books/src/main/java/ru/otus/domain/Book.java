@@ -1,10 +1,21 @@
 package ru.otus.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Book {
 
+    @Id
+    @GeneratedValue
     private long id;
     private String name;
+
+    @ManyToOne
     private Author author;
+    @ManyToOne
     private Genre genre;
 
     public Book(long id, String name, Author author, Genre genre) {

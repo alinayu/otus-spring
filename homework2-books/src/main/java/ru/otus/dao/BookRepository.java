@@ -4,7 +4,7 @@ import ru.otus.domain.Book;
 
 import java.util.List;
 
-public interface BookDao {
+public interface BookRepository {
 
     List<Book> getAll();
 

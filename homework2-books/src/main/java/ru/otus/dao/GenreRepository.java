@@ -4,7 +4,7 @@ import ru.otus.domain.Genre;
 
 import java.util.List;
 
-public interface GenreDao {
+public interface GenreRepository {
 
     Genre getById(long id);
 
