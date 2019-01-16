@@ -2,7 +2,9 @@ package ru.otus.dao;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.domain.Author;
 import ru.otus.domain.Book;
+import ru.otus.domain.Genre;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,7 +21,11 @@ public class BookRepositoryJpa implements BookRepository {
     @Override
     @Transactional
     public void insert(Book book) {
-        em.persist(book);
+        Author author = em.getReference(Author.class, book.getAuthor().getId());
+        Genre genre = em.getReference(Genre.class, book.getGenre().getId());
+        book.setAuthor(author);
+        book.setGenre(genre);
+        em.merge(book);
     }
 
     @Override

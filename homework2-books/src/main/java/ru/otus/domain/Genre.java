@@ -1,35 +1,18 @@
 package ru.otus.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.*;
 
+import javax.persistence.*;
+
+@Data
+@NoArgsConstructor(force = true)
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
+@Table(name = "genres")
 public class Genre {
     @Id
-    @GeneratedValue
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private final long id;
     private String name;
-
-    public Genre(long id) {
-        this.id = id;
-    }
-
-    public Genre(long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String toString() {
-        return id +  " " + name;
-    }
 }
