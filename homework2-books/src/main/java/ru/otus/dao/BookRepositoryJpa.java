@@ -20,12 +20,19 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     @Transactional
-    public void insert(Book book) {
-        Author author = em.getReference(Author.class, book.getAuthor().getId());
-        Genre genre = em.getReference(Genre.class, book.getGenre().getId());
+    public Book insert(Book book) {
+        Author author = em.find(Author.class, book.getAuthor().getId());
+        Genre genre = em.find(Genre.class, book.getGenre().getId());
         book.setAuthor(author);
         book.setGenre(genre);
-        em.merge(book);
+        return em.merge(book);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(long id) {
+        Book book = em.find(Book.class, id);
+        em.remove(book);
     }
 
     @Override
@@ -41,17 +48,13 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     public List<Book> getByAuthorId(long authorId) {
-        TypedQuery<Book> query = em.createQuery("select b from Book b join b.authori_id a where a.id = :authorId", Book.class);
+        TypedQuery<Book> query = em.createQuery("select b from Book b join b.author a where a.id = :authorId", Book.class);
         query.setParameter("authorId", authorId );
         return query.getResultList();
     }
 
     @Override
-    public void deleteById(long id) {
-        em.createQuery("delete from Book b where b.id = :id").setParameter("id", id).executeUpdate();
-    }
-
-    @Override
+    @Transactional
     public void updateNameById(long id, String newName) {
         em.createQuery("update Book b set b.name = :name where b.id = :id")
                 .setParameter("name", newName)

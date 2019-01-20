@@ -3,6 +3,7 @@ package ru.otus.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,16 +16,24 @@ public class Book {
     private long id;
     private String name;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private Author author;
     @ManyToOne
     private Genre genre;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "book")
+    private List<Comment> comments;
 
-    public Book(long id, String name, long authorId, long genreId) {
-        this.id = id;
+    public Book(long id) { this.id = id; }
+
+    public Book(String name, long authorId, long genreId) {
         this.name = name;
         this.author = new Author(authorId);
         this.genre = new Genre(genreId);
+    }
+
+    @Override
+    public String toString() {
+        return id + " " + name + " author: " + author + " genre: " + genre;
     }
 
 }

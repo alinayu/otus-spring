@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface GenreRepository {
 
+    Genre insert(Genre genre);
+
+    void deleteById(long id);
+
     Genre getById(long id);
 
     List<Genre> getAll();
-
-    void insert(Genre genre);
-
-    void deleteById(long id);
 }

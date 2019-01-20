@@ -15,3 +15,6 @@ insert into books(id, `name`, author_id, genre_id) values
 (3, 'Евгений Онегин', 1, 2),
 (4, 'Совершенный код', 3, 3),
 (5, 'Чистый код', 4, 3);
+
+insert into comment(id, `text`, book_id) values
+(1, 'excellent', 1);
