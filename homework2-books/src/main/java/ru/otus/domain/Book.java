@@ -1,9 +1,9 @@
 package ru.otus.domain;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Data
@@ -20,8 +20,6 @@ public class Book {
     private Author author;
     @ManyToOne
     private Genre genre;
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "book")
-    private List<Comment> comments;
 
     public Book(long id) { this.id = id; }
 

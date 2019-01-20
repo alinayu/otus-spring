@@ -2,6 +2,8 @@ package ru.otus.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -17,6 +19,7 @@ public class Comment {
     private String text;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Book book;
 
     public Comment(long bookId, String text) {
