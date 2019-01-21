@@ -16,9 +16,6 @@ public class Genre {
     private long id;
     private String name;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "author")
-    private List<Book> books;
-
     public Genre(String name) {
         this.name = name;
     }

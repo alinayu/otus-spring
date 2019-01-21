@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "comment")
+@Table(name = "comments")
 public class Comment {
 
     @Id

@@ -20,8 +20,6 @@ public class Author {
     private long id;
     private String firstName;
     private String lastName;
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "author")
-    private List<Book> books;
 
     public Author(String firstName, String lastName) {
         this.firstName = firstName;

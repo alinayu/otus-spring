@@ -2,6 +2,8 @@ package ru.otus.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -17,8 +19,10 @@ public class Book {
     private String name;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Author author;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Genre genre;
 
     public Book(long id) { this.id = id; }
