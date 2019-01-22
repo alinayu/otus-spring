@@ -3,10 +3,9 @@ package ru.otus.dao;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.otus.domain.Genre;
 
@@ -16,24 +15,31 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.tuple;
 
 @RunWith(SpringRunner.class)
-@JdbcTest
-@Import(GenreDaoJdbc.class)
+@Import(GenreRepositoryJpa.class)
+@DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class GenreDaoJdbcTest {
+class GenreRepositoryJpaTest {
 
     @Autowired
-    private GenreDao genreDao;
+    private GenreRepository genreRepository;
+
+    @Test
+    void insert() {
+        Genre saved = genreRepository.insert(new Genre("Проза"));
+        Genre found = genreRepository.getById(saved.getId());
+        assertThat(found.getName()).isEqualTo("Проза");
+    }
 
     @Test
     void getById() {
-        Genre result = genreDao.getById(1);
+        Genre result = genreRepository.getById(1);
         assertThat(result.getId()).isEqualTo(1);
         assertThat(result.getName()).isEqualTo("Повесть");
     }
 
     @Test
     void getAll() {
-        assertThat(genreDao.getAll())
+        assertThat(genreRepository.getAll())
                 .extracting("id", "name")
                 .contains(tuple(1L, "Повесть"),
                         tuple(2L, "Роман"),
@@ -41,17 +47,9 @@ class GenreDaoJdbcTest {
     }
 
     @Test
-    void insert() {
-        genreDao.insert(new Genre(4, "Проза"));
-        Genre inserted = genreDao.getById(4);
-        assertThat(inserted.getId()).isEqualTo(4);
-        assertThat(inserted.getName()).isEqualTo("Проза");
-    }
-
-    @Test
     void deleteById() {
-        genreDao.deleteById(1);
-        List<Genre> allGenres = genreDao.getAll();
+        genreRepository.deleteById(1);
+        List<Genre> allGenres = genreRepository.getAll();
         assertThat(allGenres.size()).isEqualTo(2);
         assertThat(allGenres)
                 .extracting("name")
