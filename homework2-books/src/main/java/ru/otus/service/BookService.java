@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.dao.BookRepository;
 import ru.otus.domain.Book;
+import ru.otus.exception.BookNotFoundException;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class BookService {
     private BookRepository bookRepository;
 
     public void save(Book book) {
-        bookRepository.insert(book);
+        bookRepository.save(book);
     }
 
     public void deleteById(long id) {
@@ -22,15 +23,16 @@ public class BookService {
     }
 
     public Book getById(long id) {
-        return bookRepository.getById(id);
+        return bookRepository.findById(id).orElseThrow(() ->
+                new BookNotFoundException("Book with id: " + id + " not found"));
     }
 
     public List<Book> getByAuthorId(long authorId) {
-        return bookRepository.getByAuthorId(authorId);
+        return bookRepository.findByAuthorId(authorId);
     }
 
     public List<Book> getAll() {
-        return bookRepository.getAll();
+        return bookRepository.findAll();
     }
 
     public void updateNameById(long id, String newName) {

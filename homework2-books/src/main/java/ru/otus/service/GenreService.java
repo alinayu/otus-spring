@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.dao.GenreRepository;
 import ru.otus.domain.Genre;
+import ru.otus.exception.GenreNotFoundException;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class GenreService {
     private GenreRepository genreRepository;
 
     public void save(Genre genre) {
-        genreRepository.insert(genre);
+        genreRepository.save(genre);
     }
 
     public void deleteById(long id) {
@@ -22,10 +23,10 @@ public class GenreService {
     }
 
     public Genre getById(long id) {
-        return genreRepository.getById(id);
+        return genreRepository.findById(id).orElseThrow(() -> new GenreNotFoundException("Book with id: " + id + " not found"));
     }
 
     public List<Genre> getAll() {
-        return genreRepository.getAll();
+        return genreRepository.findAll();
     }
 }

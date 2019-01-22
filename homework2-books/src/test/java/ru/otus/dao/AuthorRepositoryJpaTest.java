@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.otus.domain.Author;
@@ -15,9 +16,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.tuple;
 
 @RunWith(SpringRunner.class)
-@Import(AuthorRepositoryJpa.class)
 @DataJpaTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AuthorRepositoryJpaTest {
 
     @Autowired
@@ -25,15 +24,15 @@ class AuthorRepositoryJpaTest {
 
     @Test
     void insert() {
-        Author saved = authorRepository.insert(new Author("Максим", "Гоголь"));
-        Author found = authorRepository.getById(saved.getId());
+        Author saved = authorRepository.save(new Author("Максим", "Гоголь"));
+        Author found = authorRepository.findById(saved.getId()).get();
         assertThat(found.getFirstName()).isEqualTo("Максим");
         assertThat(found.getLastName()).isEqualTo("Гоголь");
     }
 
     @Test
     void getById() {
-        Author result = authorRepository.getById(1);
+        Author result = authorRepository.findById(1L).get();
         assertThat(result.getId()).isEqualTo(1);
         assertThat(result.getFirstName()).isEqualTo("Александр");
         assertThat(result.getLastName()).isEqualTo("Пушкин");
@@ -41,7 +40,7 @@ class AuthorRepositoryJpaTest {
 
     @Test
     void getAll() {
-        assertThat(authorRepository.getAll())
+        assertThat(authorRepository.findAll())
                 .extracting("id", "lastName", "firstName")
                 .contains(tuple(1L, "Пушкин", "Александр"),
                         tuple(2L, "Толстой", "Лев"),
@@ -51,8 +50,8 @@ class AuthorRepositoryJpaTest {
 
     @Test
     void deleteById() {
-        authorRepository.deleteById(1);
-        List<Author> allAuthors = authorRepository.getAll();
+        authorRepository.deleteById(1L);
+        List<Author> allAuthors = authorRepository.findAll();
         assertThat(allAuthors.size()).isEqualTo(3);
         assertThat(allAuthors)
                 .extracting("lastName")
