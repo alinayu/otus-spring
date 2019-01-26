@@ -15,9 +15,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.tuple;
 
 @RunWith(SpringRunner.class)
-@Import(BookRepositoryJpa.class)
 @DataJpaTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class BookRepositoryJpaTest {
 
     @Autowired
@@ -25,8 +23,8 @@ class BookRepositoryJpaTest {
 
     @Test
     void insert() {
-        Book saved = bookRepository.insert(new Book("Анна Каренина", 2, 2));
-        Book found = bookRepository.getById(saved.getId());
+        Book saved = bookRepository.save(new Book("Анна Каренина", 2, 2));
+        Book found = bookRepository.findById(saved.getId()).get();
         assertThat(found.getName()).isEqualTo("Анна Каренина");
         assertThat(found.getAuthor().getId()).isEqualTo(2);
         assertThat(found.getGenre().getId()).isEqualTo(2);
@@ -34,14 +32,14 @@ class BookRepositoryJpaTest {
 
     @Test
     void getAll() {
-        assertThat(bookRepository.getAll())
+        assertThat(bookRepository.findAll())
                 .extracting("name")
                 .contains("Война и мир", "Капитанская дочка", "Евгений Онегин", "Совершенный код", "Чистый код");
     }
 
     @Test
     void getById() {
-        Book result = bookRepository.getById(1);
+        Book result = bookRepository.findById(1L).get();
         assertThat(result.getId()).isEqualTo(1);
         assertThat(result.getName()).isEqualTo("Война и мир");
         assertThat(result.getAuthor().getId()).isEqualTo(2);
@@ -52,7 +50,7 @@ class BookRepositoryJpaTest {
 
     @Test
     void getByAuthorId() {
-        assertThat(bookRepository.getByAuthorId(1))
+        assertThat(bookRepository.findByAuthorId(1))
                 .extracting("id", "name", "author.id", "genre.id")
                 .contains(tuple(2L, "Капитанская дочка", 1L, 1L),
                         tuple(3L, "Евгений Онегин", 1L, 2L));
@@ -60,8 +58,8 @@ class BookRepositoryJpaTest {
 
     @Test
     void deleteById() {
-        bookRepository.deleteById(1);
-        List<Book> allBooks = bookRepository.getAll();
+        bookRepository.deleteById(1L);
+        List<Book> allBooks = bookRepository.findAll();
         assertThat(allBooks.size()).isEqualTo(4);
         assertThat(allBooks)
                 .extracting("name")
@@ -71,7 +69,7 @@ class BookRepositoryJpaTest {
     @Test
     void updateNameById() {
         bookRepository.updateNameById(2, "Пиковая дама");
-        Book updated = bookRepository.getById(2);
+        Book updated = bookRepository.findById(2L).get();
         assertThat(updated.getId()).isEqualTo(2);
         assertThat(updated.getName()).isEqualTo("Пиковая дама");
     }

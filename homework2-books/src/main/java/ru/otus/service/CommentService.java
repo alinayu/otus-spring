@@ -14,10 +14,10 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     public List<Comment> getByBookId(long bookId) {
-        return commentRepository.getByBookId(bookId);
+        return commentRepository.findByBookId(bookId);
     }
 
     public void saveComment(Comment comment) {
-        commentRepository.insert(comment);
+        commentRepository.save(comment);
     }
 }
