@@ -25,4 +25,7 @@ public class CommentCommands {
     public void addComment(String bookId, String text) {
         commentService.addCommentByBookId(bookId, new Comment(text));
     }
+
+    @ShellMethod("Delete comments by book id.")
+    public void deleteComments(String bookId) { commentService.deleteCommentsByBookId(bookId); }
 }

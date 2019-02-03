@@ -18,4 +18,6 @@ public interface BookStoreCustomRepository {
 
     void addCommentByBookId(String id, Comment comment);
 
+    void deleteCommentsByBookId(String id);
+
 }

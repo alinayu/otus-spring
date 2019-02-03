@@ -20,4 +20,8 @@ public class CommentService {
     public void addCommentByBookId(String id, Comment comment) {
         bookStoreRepository.addCommentByBookId(id, comment);
     }
+
+    public void deleteCommentsByBookId(String id) {
+        bookStoreRepository.deleteCommentsByBookId(id);
+    }
 }

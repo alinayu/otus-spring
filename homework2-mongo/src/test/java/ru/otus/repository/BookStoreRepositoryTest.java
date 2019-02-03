@@ -2,13 +2,16 @@ package ru.otus.repository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import ru.otus.config.MongoConfig;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.tuple;
 
-@SpringBootTest
+@DataMongoTest
+@Import(MongoConfig.class)
 @DirtiesContext
 class BookStoreRepositoryTest {
 
