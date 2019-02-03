@@ -7,12 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Genre {
+public class Comment {
 
-    private String name;
+    private String text;
 
     @Override
     public String toString() {
-        return "Жанр: " + name;
+        return text;
     }
 }

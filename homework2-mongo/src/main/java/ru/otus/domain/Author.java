@@ -3,14 +3,17 @@ package ru.otus.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 public class Author {
 
-    private String firstName;
     private String lastName;
+    private String firstName;
+
+    @Override
+    public String toString() {
+        return "Автор: " + lastName + " " + firstName;
+    }
 }

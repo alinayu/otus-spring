@@ -1,13 +1,16 @@
 package ru.otus.config;
 
+import com.github.mongobee.Mongobee;
 import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import ru.otus.changelog.DatabaseChangelog;
 
 @Configuration
-public class Config {
+public class MongoConfig {
 
     @Value("${mongo.db.url}")
     private String MONGO_DB_URL;
@@ -26,5 +29,14 @@ public class Config {
     @Bean
     public MongoTemplate mongoTemplate() {
         return new MongoTemplate(mongoClient(), MONGO_DB_NAME);
+    }
+
+    @Bean
+    public Mongobee mongobee(Environment environment) {
+        Mongobee runner = new Mongobee(mongoClient());
+        runner.setDbName(MONGO_DB_NAME);
+        runner.setChangeLogsScanPackage(DatabaseChangelog.class.getPackage().getName());
+        runner.setSpringEnvironment(environment);
+        return runner;
     }
 }

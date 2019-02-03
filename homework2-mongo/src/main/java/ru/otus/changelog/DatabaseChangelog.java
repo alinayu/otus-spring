@@ -9,13 +9,37 @@ import com.mongodb.DBCollection;
 @ChangeLog
 public class DatabaseChangelog {
 
-//    @ChangeSet(order = "001", id = "addAuthors", author = "ayumakaeva")
-//    public void insertAuthors(DB db) {
-//        DBCollection myCollection = db.getCollection("authors");
-//        BasicDBObject a1 = new BasicDBObject().append("lastName", "Пушкин").append("firstName", "Александр");
-//        BasicDBObject a2 = new BasicDBObject().append("lastName", "Толстой").append("firstName", "Лев");
-//        BasicDBObject a3 = new BasicDBObject().append("lastName", "Макконнелл").append("firstName", "Стив");
-//        BasicDBObject a4 = new BasicDBObject().append("lastName", "Мартин").append("firstName", "Роберт");
-//        myCollection.insert(a1, a2, a3, a4);
-//    }
+    @ChangeSet(order = "001", id = "addRecords", author = "ayumakaeva")
+    public void insert(DB db) {
+        DBCollection myCollection = db.getCollection("books");
+        BasicDBObject a1 = new BasicDBObject().append("lastName", "Пушкин").append("firstName", "Александр");
+        BasicDBObject a2 = new BasicDBObject().append("lastName", "Гоголь").append("firstName", "Николай");
+        BasicDBObject a3 = new BasicDBObject().append("lastName", "Крылов").append("firstName", "Иван");
+        BasicDBObject g1 = new BasicDBObject().append("name", "Проза");
+        BasicDBObject g2 = new BasicDBObject().append("name", "Стихотворение");
+        BasicDBObject g3 = new BasicDBObject().append("name", "Поэма");
+        BasicDBObject g4 = new BasicDBObject().append("name", "Басня");
+        BasicDBObject c1 = new BasicDBObject().append("text", "Хорошо");
+
+        BasicDBObject b1 = new BasicDBObject().append("_id", "1")
+                .append("name", "Дубровский")
+                .append("author", a1)
+                .append("genre", g1)
+                .append("comments", new BasicDBObject[]{c1});
+        BasicDBObject b2 = new BasicDBObject().append("_id", "2")
+                .append("name", "Пророк")
+                .append("author", a1)
+                .append("genre", g2);
+        BasicDBObject b3 = new BasicDBObject().append("_id", "3")
+                .append("name", "Мертвые души")
+                .append("author", a2)
+                .append("genre", g3);
+        BasicDBObject b4 = new BasicDBObject().append("_id", "4")
+                .append("name", "Ворона и лисица")
+                .append("author", a3)
+                .append("genre", g4);
+
+
+        myCollection.insert(b1, b2, b3, b4);
+    }
 }
