@@ -12,8 +12,6 @@ import ru.otus.domain.Book;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    List<Book> findByAuthorId(long authorId);
-
     @Modifying
     @Query("update Book set name = :newName where id = :id")
     void updateNameById(@Param("id") long id, @Param("newName") String newName);

@@ -14,10 +14,6 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public List<Comment> getByBookId(long bookId) {
-        return commentRepository.findByBookId(bookId);
-    }
-
     public void saveComment(Comment comment) {
         commentRepository.save(comment);
     }

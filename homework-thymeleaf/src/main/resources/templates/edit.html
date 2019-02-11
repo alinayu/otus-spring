@@ -26,20 +26,20 @@
 
 <!-- Book edition -->
 <form id="edit-form" th:action="@{/edit(id=${book.id})}" th:method="post" action="edit.html">
-    <h1>Book Info:</h1>
+    <h1>Книга:</h1>
 
     <div class="row">
-        <label for="id-input">ID:</label>
+        <label for="id-input">Ид:</label>
         <input id="id-input" type="text" readonly="readonly" th:value="${book.id}" value="1"/>
     </div>
 
     <div class="row">
-        <label for="holder-input">Name:</label>
-        <input id="holder-input" name="name" type="text" th:value="${book.name}" value="Pushkin"/>
+        <label for="holder-input">Название:</label>
+        <input id="holder-input" name="name" type="text" th:value="${book.name}" value="Пушкин"/>
     </div>
 
     <div class="row">
-        <button type="submit">Save</button>
+        <button type="submit">Сохранить</button>
     </div>
 </form>
 

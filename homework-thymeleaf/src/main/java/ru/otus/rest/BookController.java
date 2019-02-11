@@ -12,6 +12,8 @@ import java.util.List;
 import ru.otus.domain.Book;
 import ru.otus.service.BookService;
 
+import javax.validation.Valid;
+
 @Controller
 public class BookController {
 
@@ -37,8 +39,21 @@ public class BookController {
     }
 
     @PostMapping("/edit")
-    public String editPage(@RequestParam("id") int id, @RequestParam("name") String newName) {
-        bookService.updateNameById(id, newName);
+    public String editPage(@Valid Book book, Model model) {
+        bookService.save(book);
+        model.addAttribute("books", bookService.findAll());
         return "list";
+    }
+
+    @PostMapping("/add")
+    public String add(@Valid Book book, Model model) {
+        bookService.save(book);
+        model.addAttribute("books", bookService.findAll());
+        return "list";
+    }
+
+    @GetMapping("/add")
+    public String add(Book book) {
+        return "add-book";
     }
 }

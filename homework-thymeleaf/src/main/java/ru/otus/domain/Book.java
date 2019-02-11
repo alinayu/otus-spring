@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,26 +23,19 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name;
 
-    @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Author author;
-    @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Genre genre;
+    @NotBlank(message = "Название книги должно быть задано")
+    private String name;
 
     public Book(long id) { this.id = id; }
 
-    public Book(String name, long authorId, long genreId) {
+    public Book(String name) {
         this.name = name;
-        this.author = new Author(authorId);
-        this.genre = new Genre(genreId);
     }
 
     @Override
     public String toString() {
-        return id + " " + name + " author: " + author + " genre: " + genre;
+        return id + " " + name;
     }
 
 }
