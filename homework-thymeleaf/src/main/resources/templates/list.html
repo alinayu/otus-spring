@@ -17,7 +17,9 @@
 <body>
 <h2>Книги</h2>
 
-<a th:href="@{/add}" href="add-book.html">Добавить книгу</a>
+<form th:action="@{/add}" th:href="add-book.html">
+    <button type="submit">Добавить книгу</button>
+</form>
 
 
 <table class="books">
@@ -32,10 +34,14 @@
         <td th:text="${book.id}">1</td>
         <td th:text="${book.name}">Pushkin</td>
         <td>
-            <a th:href="@{/edit/{id}(id=${book.id})}" href="edit.html">Редактировать</a>
+            <form th:action="@{/edit/{id}(id=${book.id})}" th:href="edit.html">
+                <button type="submit">Редактировать</button>
+            </form>
         </td>
         <td>
-            <a th:href="@{/delete/{id}(id=${book.id})}">Удалить</a>
+            <form th:action="@{/delete/{id}(id=${book.id})}" th:method="post">
+                <button type="submit">Удалить</button>
+            </form>
         </td>
     </tr>
     </tbody>

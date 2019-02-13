@@ -37,17 +37,15 @@ public class BookController {
     }
 
     @PostMapping("/update/{id}")
-    public String updatePage(@PathVariable("id") long id, @Valid Book book, Model model) {
+    public String updatePage(@PathVariable("id") long id, @Valid Book book) {
         bookService.save(book);
-        model.addAttribute("books", bookService.findAll());
-        return "list";
+        return "redirect:/";
     }
 
     @PostMapping("/add")
     public String add(@Valid Book book, Model model) {
         bookService.save(book);
-        model.addAttribute("books", bookService.findAll());
-        return "list";
+        return "redirect:/";
     }
 
     @GetMapping("/add")
@@ -55,10 +53,9 @@ public class BookController {
         return "add-book";
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") long id, Model model) {
         bookService.deleteById(id);
-        model.addAttribute("books", bookService.findAll());
-        return "list";
+        return "redirect:/";
     }
 }
