@@ -24,8 +24,7 @@
 </head>
 <body>
 
-<!-- Book edition -->
-<form id="edit-form" th:action="@{/edit(id=${book.id})}" th:method="post" action="edit.html">
+<form id="edit-form" th:action="@{/update/{id}(id=${book.id})}" th:method="post">
     <h1>Книга:</h1>
 
     <div class="row">

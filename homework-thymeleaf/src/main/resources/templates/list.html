@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-<h1>Книги:</h1>
+<h2>Книги</h2>
 
 <a th:href="@{/add}" href="add-book.html">Добавить книгу</a>
 
@@ -32,7 +32,10 @@
         <td th:text="${book.id}">1</td>
         <td th:text="${book.name}">Pushkin</td>
         <td>
-            <a th:href="@{/edit(id=${book.id})}" href="edit.html">Редактировать</a>
+            <a th:href="@{/edit/{id}(id=${book.id})}" href="edit.html">Редактировать</a>
+        </td>
+        <td>
+            <a th:href="@{/delete/{id}(id=${book.id})}">Удалить</a>
         </td>
     </tr>
     </tbody>
