@@ -19,8 +19,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -38,24 +40,33 @@ class BookControllerTest {
     @Test
     void getAll() throws Exception {
         given(this.bookService.findAll()).willReturn(singletonList(new Book(1, "test")));
-        this.mvc.perform(get("/book/list"))
+        this.mvc.perform(get("/books"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].name", is("test")));
     }
 
     @Test
+    void getById() throws Exception {
+        given(this.bookService.findById(1)).willReturn(new Book(1, "test"));
+        this.mvc.perform(get("/books/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("test")));
+    }
+
+    @Test
     void deleteById() throws Exception {
-        this.mvc.perform(post("/book/delete/1"))
+        this.mvc.perform(delete("/books/1"))
                 .andExpect(status().isOk());
         verify(bookService, times(1)).deleteById(1);
     }
 
     @Test
     void save() throws Exception {
-        Book book = new Book(1, "test");
+        Book book = new Book("test");
         ObjectMapper objectMapper = new ObjectMapper();
-        this.mvc.perform(post("/book/save")
+        this.mvc.perform(post("/books")
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(book)))
                 .andExpect(status().isOk());
@@ -63,11 +74,13 @@ class BookControllerTest {
     }
 
     @Test
-    void getById() throws Exception {
-        given(this.bookService.findById(1)).willReturn(new Book(1, "test"));
-        this.mvc.perform(get("/book/get/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.name", is("test")));
+    void update() throws Exception {
+        Book book = new Book(1, "test");
+        ObjectMapper objectMapper = new ObjectMapper();
+        this.mvc.perform(put("/books/1")
+                .contentType(APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(book)))
+                .andExpect(status().isOk());
+        verify(bookService, times(1)).save(book);
     }
 }

@@ -18,22 +18,27 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/book/list")
+    @GetMapping("/books")
     public List<BookDto> getAll() {
         return bookService.findAll().stream().map(BookDto::toDto)
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/book/delete/{id}")
+    @GetMapping("/books/{id}")
+    public BookDto getById(@PathVariable("id") Long id) {return BookDto.toDto(bookService.findById(id));}
+
+    @DeleteMapping("/books/{id}")
     public void deleteById(@PathVariable("id") Long id) {
         bookService.deleteById(id);
     }
 
-    @PostMapping("/book/save")
+    @PostMapping("/books")
     public void save(@RequestBody Book book) {
         bookService.save(book);
     }
 
-    @GetMapping("/book/get/{id}")
-    public BookDto getById(@PathVariable("id") Long id) {return BookDto.toDto(bookService.findById(id));}
+    @PutMapping("/books/{id}")
+    public void update(@PathVariable("id") Long id, @RequestBody Book book) {
+        bookService.save(book);
+    }
 }

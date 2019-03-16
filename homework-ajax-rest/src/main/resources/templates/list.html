@@ -54,13 +54,22 @@
     $(document).ready(function() {
         listAllBooks();
         var book = {};
+        var url = "";
+        var method = "";
         $('#btnAddBook').click(function () {
             book.id = $('#bookId').val();
             book.name = $('#bookName').val();
             var bookObj = JSON.stringify(book);
+            if(book.id) {
+                url = "/books/" + book.id;
+                method = 'PUT';
+            } else {
+                url = "/books";
+                method = 'POST'
+            }
             $.ajax({
-                url: '/book/save',
-                method: 'POST',
+                url: url,
+                method: method,
                 data: bookObj,
                 contentType: 'application/json; charset=utf-8',
                 success: function () {
@@ -75,7 +84,7 @@
     });
 
     function listAllBooks() {
-        $.get('/book/list').done(function (books) {
+        $.get('/books').done(function (books) {
             $('#books tbody').empty();
             books.forEach(function (book) {
                 $('#books tbody').append(`
@@ -92,8 +101,8 @@
 
     function deleteBook(id) {
         $.ajax({
-            url: '/book/delete/' + id,
-            method: 'POST',
+            url: '/books/' + id,
+            method: 'DELETE',
                    success: function() {
                        listAllBooks();
                    },
@@ -105,7 +114,7 @@
 
     function updateBook(id){
         $.ajax({
-            url: '/book/get/' + id,
+            url: '/books/' + id,
             method: 'GET',
             dataType: 'json',
             success: function (data) {
