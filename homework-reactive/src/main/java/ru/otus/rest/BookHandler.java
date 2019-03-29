@@ -3,6 +3,7 @@ package ru.otus.rest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.domain.Book;
 import ru.otus.repository.BookRepository;
@@ -23,19 +24,16 @@ public class BookHandler {
     }
 
     Mono<ServerResponse> findAll(ServerRequest request) {
-        return ok().contentType(APPLICATION_JSON).body(bookRepository.findAll(), Book.class);
+        Flux<Book> bookFlux = request.queryParam("genreName")
+                .map(genreName -> bookRepository.findByGenre_Name(genreName))
+                .orElse(bookRepository.findAll());
+        return ok().contentType(APPLICATION_JSON).body(bookFlux, Book.class);
     }
 
     Mono<ServerResponse> findById(ServerRequest request) {
         return bookRepository.findById(request.pathVariable("id"))
                 .flatMap(person -> ok().contentType(APPLICATION_JSON).body(fromObject(person)))
                 .switchIfEmpty(notFound().build());
-    }
-
-    Mono<ServerResponse> findByGenreName(ServerRequest request) {
-        return ok().contentType(APPLICATION_JSON)
-                .body(bookRepository.findByGenre_Name(request.queryParam("name").get()),
-                        Book.class);
     }
 
     Mono<ServerResponse> save(ServerRequest request) {

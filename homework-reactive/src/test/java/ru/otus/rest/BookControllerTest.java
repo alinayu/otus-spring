@@ -3,11 +3,11 @@ package ru.otus.rest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,7 +21,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@WebFluxTest
+@ContextConfiguration(classes = {BookRouter.class, BookHandler.class})
 public class BookControllerTest {
 
     @Autowired
@@ -50,7 +51,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void findByGenre() {
+    public void findAllByGenreName() {
         WebTestClient client = WebTestClient
                 .bindToRouterFunction(route)
                 .build();
@@ -61,7 +62,7 @@ public class BookControllerTest {
         given(bookRepository.findByGenre_Name("Fiction")).willReturn(Flux.fromIterable(books));
 
         client.get()
-                .uri("/book/bygenre?name=Fiction")
+                .uri("/book?genreName=Fiction")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(Book.class)
@@ -109,7 +110,7 @@ public class BookControllerTest {
         given(bookRepository.save(book)).willReturn(Mono.just(book));
 
         client.post()
-                .uri("/book/save")
+                .uri("/book")
                 .body(fromObject(book))
                 .exchange()
                 .expectStatus()
@@ -125,7 +126,7 @@ public class BookControllerTest {
         given(bookRepository.updateBookNameById("1", "new name")).willReturn(Mono.empty());
 
         client.put()
-                .uri("/book/update/name/1")
+                .uri("/book/1")
                 .body(fromObject("new name"))
                 .exchange()
                 .expectStatus()
