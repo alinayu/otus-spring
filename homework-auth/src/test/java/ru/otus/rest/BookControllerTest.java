@@ -21,8 +21,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -85,5 +84,13 @@ class BookControllerTest {
                 .content(objectMapper.writeValueAsString(book)))
                 .andExpect(status().isOk());
         verify(bookService, times(1)).save(book);
+    }
+
+    @Test
+    void getAllWithoutAuthWillRedirectToLogin() throws Exception {
+        this.mvc.perform(get("/books"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/login"));
+        verify(bookService, times(0)).findAll();
     }
 }

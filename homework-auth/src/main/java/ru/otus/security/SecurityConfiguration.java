@@ -22,9 +22,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
-                // Включает Form-based аутентификацию
                 .formLogin()
                 .defaultSuccessUrl("/")
+                .loginProcessingUrl("/login")
+                .failureUrl("/login?error")
+                .usernameParameter("username")
+                .passwordParameter("password")
         ;
     }
 
