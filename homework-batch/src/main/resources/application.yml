@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+mongo:
+  db:
+    name: library
+    url: localhost
+    port: 27017
