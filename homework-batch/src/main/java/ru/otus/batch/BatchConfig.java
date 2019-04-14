@@ -80,7 +80,7 @@ public class BatchConfig {
     }
 
     @Bean
-    public Job importUserJob(Step step1) {
+    public Job importBooksJob(Step step1) {
         return jobBuilderFactory.get("importBooksJob")
                 .incrementer(new RunIdIncrementer())
                 .flow(step1)
@@ -100,8 +100,8 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step step1(ItemReader reader, ItemProcessor processor, ItemWriter writer) {
-        return stepBuilderFactory.get("step1")
+    public Step migrate(ItemReader reader, ItemProcessor processor, ItemWriter writer) {
+        return stepBuilderFactory.get("migrate")
                 .chunk(5)
                 .reader(reader)
                 .processor(processor)
@@ -116,16 +116,6 @@ public class BatchConfig {
                         logger.info("Начало записи"); }
                     public void afterWrite(List list) { logger.info("Конец записи"); }
                     public void onWriteError(Exception e, List list) { logger.info("Ошибка записи"); }
-                })
-                .listener(new ItemProcessListener() {
-                    public void beforeProcess(Object o) {logger.info("Начало обработки");}
-                    public void afterProcess(Object o, Object o2) {logger.info("Конец обработки");}
-                    public void onProcessError(Object o, Exception e) {logger.info("Ошбка обработки");}
-                })
-                .listener(new ChunkListener() {
-                    public void beforeChunk(ChunkContext chunkContext) {logger.info("Начало пачки");}
-                    public void afterChunk(ChunkContext chunkContext) {logger.info("Конец пачки");}
-                    public void afterChunkError(ChunkContext chunkContext) {logger.info("Ошибка пачки");}
                 })
                 .build();
     }
