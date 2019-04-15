@@ -28,4 +28,8 @@ public class BookHistory {
         this.oldName = oldName;
     }
 
+    public static BookHistory toBookHistory(Book book) {
+        return new BookHistory(book.getId(), book.getName());
+    }
+
 }
