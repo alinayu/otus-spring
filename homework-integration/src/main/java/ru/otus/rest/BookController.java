@@ -39,6 +39,6 @@ public class BookController {
 
     @PutMapping("/books/{id}")
     public void update(@PathVariable("id") Long id, @RequestBody Book book) {
-        bookService.save(book);
+        bookService.update(book);
     }
 }

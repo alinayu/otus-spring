@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.Book;
+import ru.otus.domain.BookHistory;
 import ru.otus.exception.BookNotFoundException;
-import ru.otus.integration.BookProcessingService;
+import ru.otus.integration.BookHistoryService;
 import ru.otus.repository.BookRepository;
 
 import java.util.List;
@@ -18,9 +19,14 @@ public class BookService {
     private BookRepository bookRepository;
 
     @Autowired
-    private BookProcessingService bookProcessingService;
+    private BookHistoryService bookHistoryService;
 
     public void save(Book book) {
+        bookRepository.save(book);
+    }
+
+    public void update(Book book) {
+        bookHistoryService.save(BookHistory.toBookHistory(book));
         bookRepository.save(book);
     }
 
@@ -35,9 +41,5 @@ public class BookService {
 
     public List<Book> findAll() {
         return bookRepository.findAll();
-    }
-
-    public void updateNameById(long id, String newName) {
-        bookRepository.updateNameById(id, newName);
     }
 }
