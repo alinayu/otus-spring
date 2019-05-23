@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Книги</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        .books td {
+            border: 1px solid lightgray;
+            padding: 5px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+    </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<h1>Книги:</h1>
+<table id="saveForm">
+    <tr>
+        <td>Ид</td>
+        <td><input type="text" id = "bookId" readonly="readonly"></td>
+    </tr>
+    <tr>
+        <td>Название</td>
+        <td><input type="text" id = "bookName"></td>
+    </tr>
+    <tr>
+        <td><input type="button" value="Сохранить" id="btnAddBook"></td>
+    </tr>
+</table>
+
+<table border = "1" id="books">
+    <thead>
+    <tr>
+        <th>Ид</th>
+        <th>Название</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<script>
+    $(document).ready(function() {
+        listAllBooks();
+        var book = {};
+        var url = "";
+        var method = "";
+        $('#btnAddBook').click(function () {
+            book.id = $('#bookId').val();
+            book.name = $('#bookName').val();
+            var bookObj = JSON.stringify(book);
+            if(book.id) {
+                url = "/books/" + book.id;
+                method = 'PUT';
+            } else {
+                url = "/books";
+                method = 'POST'
+            }
+            $.ajax({
+                url: url,
+                method: method,
+                data: bookObj,
+                contentType: 'application/json; charset=utf-8',
+                success: function () {
+                    listAllBooks();
+                    reset();
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            })
+        });
+    });
+
+    function listAllBooks() {
+        $.get('/books').done(function (books) {
+            $('#books tbody').empty();
+            books.forEach(function (book) {
+                $('#books tbody').append(`
+                    <tr>
+                        <td>${book.id}</td>
+                        <td>${book.name}</td>
+                        <td><button onclick="updateBook(${book.id})">Изменить</button></td>
+                        <td><button onclick="deleteBook(${book.id})">Удалить</button></td>
+                    </tr>
+                `)
+            });
+        })
+    }
+
+    function deleteBook(id) {
+        $.ajax({
+            url: '/books/' + id,
+            method: 'DELETE',
+                   success: function() {
+                       listAllBooks();
+                   },
+                   error: function (error) {
+                       alert(error);
+                   }
+               })
+    }
+
+    function updateBook(id){
+        $.ajax({
+            url: '/books/' + id,
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#bookId').val(data.id);
+                $('#bookName').val(data.name);
+            },
+            error: function (error) {
+                alert(error);
+            }
+        })
+    }
+
+    function reset(){
+        $('#bookId').val('');
+        $('#bookName').val('');
+    }
+</script>
+</body>
+</html>
