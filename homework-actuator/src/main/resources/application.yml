@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - metrics
+          - logfile
+  endpoint:
+    health:
+      show-details: always
+logging:
+  file: "target/app.log"
